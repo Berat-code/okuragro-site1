@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1788726027829,
+      "tag": "0000_icy_sentinels",
+      "breakpoints": true
+    }
+  ]
+}
