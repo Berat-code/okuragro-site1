@@ -1,0 +1,6 @@
+import {env} from 'cloudflare:workers';
+import {initialContent,type Content} from '../app/content';
+export async function readContent(){const row=await env.DB.prepare('SELECT body, revision FROM site_content WHERE id = ?').bind('main').first<{body:string;revision:number}>();return {content:row?refresh(JSON.parse(row.body) as Content):initialContent,revision:row?.revision??0};}
+export async function saveContent(content:Content,revision:number){const body=JSON.stringify(content),now=new Date().toISOString();const result=revision===0?await env.DB.prepare('INSERT INTO site_content (id,body,revision,updated_at) VALUES (?,?,1,?) ON CONFLICT(id) DO NOTHING').bind('main',body,now).run():await env.DB.prepare('UPDATE site_content SET body = ?, revision = revision + 1, updated_at = ? WHERE id = ? AND revision = ?').bind(body,now,'main',revision).run();return result.meta.changes===1;}
+
+function refresh(c:Content):Content{return {...c,headlineTr:c.headlineTr==='Toprağın gücü.\nGeleceğin tarımı.'?initialContent.headlineTr:c.headlineTr,headlineEn:c.headlineEn==='Rooted in the land.\nGrowing the future.'?initialContent.headlineEn:c.headlineEn,introTr:c.introTr.replace('Siirt’ten Güneydoğu Anadolu’ya','Siirt’ten Türkiye’nin her yerine'),introEn:c.introEn.replace('across Southeastern Anatolia','across Türkiye')}}
