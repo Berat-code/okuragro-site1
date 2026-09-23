@@ -1,0 +1,1 @@
+export default function NotFound(){return <main className="section"><p className="eyebrow">OKUR AGRO / 404</p><h1>Bu sayfa bulunamadı.</h1><a className="button green" style={{marginTop:30}} href="/">Ana sayfaya dön ↗</a></main>}
